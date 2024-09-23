@@ -1,9 +1,8 @@
 const fontFamily = {
-  PrimaryFont: 'Mulish-Regular',
-  HeadingFont: 'Mulish-SemiBold',
-  BigHeadingFont: 'Mulish-Bold',
-  MediumFont: 'Mulish-Medium',
-
+  LibreFranklinRegularFont: 'LibreFranklin-Regular',
+  LibreFranklinSemiBold: 'LibreFranklin-SemiBold',
+  LibreFranklinBold: 'LibreFranklin-Bold',
+  LibreFranklinMediumFont: 'LibreFranklin-Medium',
 };
 
 export default fontFamily;

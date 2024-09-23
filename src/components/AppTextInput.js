@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Image,
   I18nManager,
-  Animated,
 } from 'react-native';
 import config from '../config';
 
@@ -43,140 +42,105 @@ const AppTextInput = ({
   onSubmitEditing,
   ...props
 }) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const animatedValue = useRef(new Animated.Value(0)).current;
-
-  const handleFocus = () => {
-    setIsFocused(true);
-    Animated.timing(animatedValue, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const handleBlur = () => {
-    if (!props.value) {
-      setIsFocused(false);
-      Animated.timing(animatedValue, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: false,
-      }).start();
-    }
-  };
-
-  const translateY = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -20],
-  });
   return (
     <View style={[styles.mainContainer, containerStyle]}>
-
-    <View
-      style={[
-        styles.contentView,
-        viewStyle,
-        {
-          borderColor: isFocused
-            ? config.colors.cyanBlueColor
-            : config.colors.white,
-        },
-      ]}>
-      {leftIcon && (
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={leftIconPress}
-          style={{
-            borderLeftColor: '#D6D6D6',
-            borderLeftWidth:
-              showVerticalLine && showVerticalLine == true ? 1 : 0,
-          }}>
-          <Image
-            source={leftIcon && leftIcon}
-            style={[styles.leftIconImage, leftIconStyle]}
-          />
-        </TouchableOpacity>
+      {inputTextLabelVisible && (
+        <View style={styles.labelContiner}>
+          <Text
+            style={[
+              {
+                ...styles.labelText,
+                textAlign: 'left',
+                marginHorizontal:
+                  inputLabelmarginHorizontal && inputLabelmarginHorizontal,
+              },
+              labelStyle,
+            ]}>
+            {inputTextLabel && inputTextLabel}
+          </Text>
+        </View>
       )}
-      <Animated.Text
-        style={[
-          {
-            ...styles.labelText,
-            textAlign: 'left',
-            marginHorizontal:
-              inputLabelmarginHorizontal && inputLabelmarginHorizontal,
-            transform: [{translateY}],
-          },
-          labelStyle,
-        ]}>
-        {placeholder}
-      </Animated.Text>
-      <TextInput
-        {...props}
-        secureTextEntry={secureTextEntry}
-        style={[styles.textInput, textInputStyle]}
-        ref={inputRef => {
-          onRefs && onRefs(inputRef);
-        }}
-        pointerEvents={editable == false ? 'none' : 'auto'}
-        autoCorrect={false}
-        keyboardType={keyboardType}
-        multiline={multiline ? multiline : false}
-        numberOfLines={numberOfLines}
-        onChangeText={onChangeText}
-        autoCapitalize={'none'}
-        textAlignVertical={textAlignVertical}
-        editable={editable}
-        value={value}
-        caretHidden={false}
-        maxLength={maxLength}
-        returnKeyType={'done'}
-        onSubmitEditing={onSubmitEditing}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-      />
-
-      {rightIcon && (
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={rightIconPress}
-          style={[
-            rightIconViewStyle,
-            {
+      <View style={[styles.contentView, viewStyle]}>
+        {leftIcon && (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={leftIconPress}
+            style={{
               borderLeftColor: '#D6D6D6',
               borderLeftWidth:
                 showVerticalLine && showVerticalLine == true ? 1 : 0,
-            },
-          ]}>
-          <Image
-            source={rightIcon && rightIcon}
-            style={[styles.rightIconImage, rightIconStyle]}
-          />
-        </TouchableOpacity>
-      )}
-    </View>
+            }}>
+            <Image
+              source={leftIcon && leftIcon}
+              style={[styles.leftIconImage, leftIconStyle]}
+            />
+          </TouchableOpacity>
+        )}
+        <TextInput
+          {...props}
+          placeholder={placeholder}
+          secureTextEntry={secureTextEntry}
+          style={[styles.textInput, textInputStyle]}
+          ref={inputRef => {
+            onRefs && onRefs(inputRef);
+          }}
+          pointerEvents={editable == false ? 'none' : 'auto'}
+          autoCorrect={false}
+          placeholderTextColor={config.colors.placeHolderColor}
+          keyboardType={keyboardType}
+          multiline={multiline ? multiline : false}
+          numberOfLines={numberOfLines}
+          onChangeText={onChangeText}
+          autoCapitalize={'none'}
+          textAlignVertical={textAlignVertical}
+          editable={editable}
+          value={value}
+          caretHidden={false}
+          maxLength={maxLength}
+          returnKeyType={'done'}
+          onSubmitEditing={onSubmitEditing}
+        />
+
+        {rightIcon && (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={rightIconPress}
+            style={[
+              rightIconViewStyle,
+              {
+                borderLeftColor: '#D6D6D6',
+                borderLeftWidth:
+                  showVerticalLine && showVerticalLine == true ? 1 : 0,
+              },
+            ]}>
+            <Image
+              source={rightIcon && rightIcon}
+              style={[styles.rightIconImage, rightIconStyle]}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {},
   contentView: {
     flexDirection: 'row',
-    height: 56,
-    borderRadius: 4,
+    height: 48,
+    borderRadius: 20,
     alignItems: 'center',
     marginVertical: 5,
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    backgroundColor: config.colors.white,
+    backgroundColor: config.colors.lightGreyColor,
+    paddingHorizontal: 10,
   },
   textInput: {
-    height: 56,
+    height: 48,
     fontSize: 14,
     color: config.colors.black,
-
-    fontFamily: config.fonts.Poppins_Regular,
+    lineHeight: 21,
+    fontFamily: config.fonts.LibreFranklinRegularFont,
   },
   eyeIcon: {
     height: 40,
@@ -190,15 +154,12 @@ const styles = StyleSheet.create({
   },
   labelText: {
     fontFamily: config.fonts.PrimaryFont,
-    color: config.colors.placeHolderColor,
-    fontSize: 12,
-    position: 'absolute',
-    left: 15,
-    top: 20,
+    color: config.colors.labelColor,
+    fontSize: 14,
   },
   rightIconImage: {
-    width: 16,
-    height: 16,
+    width: 20,
+    height: 20,
     resizeMode: 'contain',
     marginHorizontal: 4,
   },
